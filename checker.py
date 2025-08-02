@@ -3,15 +3,15 @@ from bs4 import BeautifulSoup
 import time
 
 URL = "https://www.fac-habitat.com/fr/residences-etudiantes/id-23-simone-de-beauvoir"
-TOPIC = "mariacheckresidence"  # remplace par ton nom de topic ntfy
 CHECK_INTERVAL = 300  # 5 minutes
 
-# Remplace "ton-topic-ntfy" par ton nom de topic ntfy personnel
 TOPIC = "logement-fac-habitat"
 
 def notify(message):
-    # Envoie une notif via ntfy.sh
-    requests.post(f"https://ntfy.sh/{TOPIC}", data=message.encode())
+    try:
+        requests.post(f"https://ntfy.sh/{TOPIC}", data=message.encode())
+    except Exception as e:
+        print(f"Erreur notification: {e}")
 
 def check_button():
     headers = {
@@ -19,6 +19,11 @@ def check_button():
     }
     try:
         response = requests.get(URL, headers=headers)
+        print(f"Status code: {response.status_code}")
+        if response.status_code != 200:
+            print(f"Erreur HTTP: {response.status_code}")
+            return
+        
         soup = BeautifulSoup(response.text, 'html.parser')
         bouton = soup.find("a", class_="btn_reserver", string="Déposer une demande")
         if bouton:
@@ -30,6 +35,7 @@ def check_button():
         print(f"Erreur : {e}")
 
 if __name__ == "__main__":
+    print("🔍 Checker démarré !")
     while True:
         check_button()
         time.sleep(CHECK_INTERVAL)
