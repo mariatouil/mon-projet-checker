@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import time
 
 URL = "https://www.fac-habitat.com/fr/residences-etudiantes/id-23-simone-de-beauvoir"
+TOPIC = "mariacheckresidence"  # remplace par ton nom de topic ntfy
 CHECK_INTERVAL = 300  # 5 minutes
 
 # Remplace "ton-topic-ntfy" par ton nom de topic ntfy personnel
