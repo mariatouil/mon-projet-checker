@@ -5,14 +5,34 @@ import time
 # Liste des résidences à surveiller
 RESIDENCES = [
     {
-        "nom": "Simone de Beauvoir",
+        "nom": "Simone de Beauvoir massy",
         "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-23-simone-de-beauvoir"
     },
     {
-        "nom": "Résidence 2",
-        "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-XX-residence-2"
+        "nom": "Résidence Magellan massy ",
+        "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-77-magellan"
     },
-    # Ajoute autant que tu veux
+    {
+        "nom": "Résidence Erwin Guldner  sceaux ",
+        "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-80-residence-etudiante-erwin-guldner-sceaux"
+    },
+    {
+        "nom": "Résidence pierre-ringenbach-  sceaux ",
+        "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-82-residence-etudiante-pierre-ringenbach-sceaux"
+    },
+    {
+        "nom": "Cesaria Evora aubervillier ",
+        "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-35-cesaria-evora"
+    },
+    {
+        "nom": "Phylosofia aubervillier ",
+        "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-57-philosophiaa"
+    },
+    {
+        "nom": "lucie-aubrac aubervillier ",
+        "url": "https://www.fac-habitat.com/fr/residences-etudiantes/id-78-lucie-aubrac"
+    },
+    
 ]
 
 CHECK_INTERVAL = 300  # 5 minutes
@@ -36,15 +56,18 @@ def check_button(url, nom):
             return
         
         soup = BeautifulSoup(response.text, 'html.parser')
-        bouton = soup.find("a", class_="btn_reserver", string="Déposer une demande")
-        if bouton:
-            message = f"✅ Le bouton 'Déposer une demande' est DISPONIBLE à {nom} !"
-            notify(message)
-            print(message)
-        else:
-            print(f"❌ Toujours indisponible à {nom}.")
+        boutons = soup.find_all("a", class_="btn_reserver")
+        for bouton in boutons:
+            if "déposer une demande" in bouton.text.strip().lower():
+                message = f"✅ Le bouton 'Déposer une demande' est DISPONIBLE à {nom} !"
+                notify(message)
+                print(message)
+                return
+        
+        print(f"❌ Toujours indisponible à {nom}.")
     except Exception as e:
         print(f"Erreur lors de la vérification de {nom} : {e}")
+
 
 if __name__ == "__main__":
     print("🔍 Checker démarré !")
